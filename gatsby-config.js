@@ -2,7 +2,7 @@ module.exports = {
   pathPrefix: '/Running_Page', // Change to `/running_page` when running on github pages
   siteMetadata: {
     siteTitle: 'WuLeiYuan Running Page',
-    siteUrl: 'https://yihong.run',
+    siteUrl: 'https://wuleiyuan.github.io',
     logo: 'https://upload.shejihz.com/2019/04/0eefe2eaafd7c8e49830e6afb396c7d4.jpg?x-oss-process=image/resize,m_fill,w_1600,h_1600#',
     description: 'Personal site and blog',
     navLinks: [
