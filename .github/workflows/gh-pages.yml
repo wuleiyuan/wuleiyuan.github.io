@@ -60,7 +60,7 @@ jobs:
           cp -r assets/ public/static
 
       - name: GitHub Pages
-        uses: wuleiyuan/Running_Page
+        uses: wuleiyuan/Running_Page@v1.0
         with:
           # Git branch where site will be deployed
           target_branch: master
