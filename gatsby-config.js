@@ -8,11 +8,11 @@ module.exports = {
     navLinks: [
       {
         name: 'Blog',
-        url: 'https://yihong.run/running',
+        url: 'https://github.com/wuleiyuan',
       },
       {
         name: 'About',
-        url: 'https://github.com/yihong0618/running_page/blob/master/README-CN.md',
+        url: 'https://github.com/wuleiyuan',
       },
     ],
   },
