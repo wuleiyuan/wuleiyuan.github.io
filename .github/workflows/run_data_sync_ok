@@ -1,0 +1,54 @@
+name: Sync Running Data
+
+on:
+  schedule:
+    - cron: '0 2 * * *'  # 每天 UTC 时间 2 点运行
+  workflow_dispatch:     # 允许手动触发
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Cache pip
+        uses: actions/cache@v4  # ←←← 已修复：从 v2 升级到 v4
+        with:
+          path: ～/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run data sync
+        env:
+          STRAVA_CLIENT_ID: ${{ secrets.STRAVA_CLIENT_ID }}
+          STRAVA_CLIENT_SECRET: ${{ secrets.STRAVA_CLIENT_SECRET }}
+          STRAVA_REFRESH_TOKEN: ${{ secrets.STRAVA_REFRESH_TOKEN }}
+          NIKE_EMAIL: ${{ secrets.NIKE_EMAIL }}
+          NIKE_PASSWORD: ${{ secrets.NIKE_PASSWORD }}
+          GPX_OUT_DIR: "gpx"
+          OUTPUT_DIR: "."
+        run: python scripts/gen.py
+
+      - name: Commit and push if changed
+        run: |
+          git config --global user.name 'GitHub Action'
+          git config --global user.email 'action@github.com'
+          git add activities.json gpx/ README.md
+          git status
+          if ! git diff --staged --quiet; then
+            git commit -m "chore: update running data"
+            git push
+          else
+            echo "No changes to commit"
+          fi
