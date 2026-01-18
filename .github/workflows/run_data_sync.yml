@@ -1,7 +1,7 @@
 name: Sync Running Data from Strava
 
 on:
-  # 每天 UTC 00:00 运行（北京时间 08:00）
+  # 每天 UTC 00:00 自动运行（北京时间 08:00）
   schedule:
     - cron: '0 0 * * *'
   # 允许手动触发
