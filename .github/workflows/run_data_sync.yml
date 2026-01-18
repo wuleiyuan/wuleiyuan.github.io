@@ -45,9 +45,9 @@ jobs:
           python scripts/gen_svg.py --from-db --title "${{ env.TITLE }}" --type github --athlete "${{ env.ATHLETE }}" --output assets/github.svg
           python scripts/gen_svg.py --from-db --title "${{ env.TITLE_GRID }}" --type grid --athlete "${{ env.ATHLETE }}" --output assets/grid.svg --min-distance ${{ env.MIN_GRID_DISTANCE }}
 
-      - name: 📝 Update README (optional)
-        run: |
-          python scripts/readme.py
+#      - name: 📝 Update README (optional)
+#        run: |
+#          python scripts/readme.py
 
       - name: 💾 Commit and push new data
         run: |
