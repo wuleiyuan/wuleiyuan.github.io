@@ -1,4 +1,5 @@
-// const
+// MapTiler access token (replace with your own)
+const MAP_TILE_ACCESS_TOKEN = '8lAomZ2Nlw9iCBS1nowf';
 // MapTiler access token (replace with your own)
 const MAP_TILE_ACCESS_TOKEN = '8lAomZ2Nlw9iCBS1nowf';
 const MAPBOX_TOKEN =

@@ -10,6 +10,8 @@ import {
   USE_DASH_LINE,
   LINE_OPACITY,
 } from 'src/utils/const';
+  LINE_OPACITY,
+} from 'src/utils/const';
   IS_CHINESE,
   MAIN_COLOR,
   MAPBOX_TOKEN,
