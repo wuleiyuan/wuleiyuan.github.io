@@ -1,3 +1,13 @@
+# Running Page (V1 - GitHub Pages Edition)
+
+> **Version Update (2026-02-28)**:
+> - **Map Source Update**: This stable version has successfully migrated its underlying map tile service from Mapbox to **MapTiler**.
+> - **Resolved Limits**: Fixed the issue where the map failed to load due to an expired Mapbox Token.
+> - **Merged Structure**: It is now managed alongside the new generation Vercel version locally. This project will continue running as the classic stable GitHub Pages edition.
+
+---
+
+
 <p align="center">
   <img width="150" src="https://raw.githubusercontent.com/shaonianche/gallery/master/running_page/running_page_logo.png" />
 </p>
