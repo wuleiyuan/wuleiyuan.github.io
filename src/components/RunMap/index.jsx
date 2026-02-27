@@ -5,6 +5,13 @@ import useActivities from 'src/hooks/useActivities';
 import {
   IS_CHINESE,
   MAIN_COLOR,
+  MAP_TILE_ACCESS_TOKEN,
+  PROVINCE_FILL_COLOR,
+  USE_DASH_LINE,
+  LINE_OPACITY,
+} from 'src/utils/const';
+  IS_CHINESE,
+  MAIN_COLOR,
   MAPBOX_TOKEN,
   PROVINCE_FILL_COLOR,
   USE_DASH_LINE,
@@ -66,10 +73,10 @@ const RunMap = ({
   return (
     <ReactMapGL
       {...viewport}
-      mapStyle="mapbox://styles/mapbox/dark-v9"
+      mapStyle={`https://api.maptiler.com/maps/dataviz-dark/style.json?key=${MAP_TILE_ACCESS_TOKEN}`}
       onViewportChange={setViewport}
       onLoad={addControlHandler}
-      mapboxApiAccessToken={MAPBOX_TOKEN}
+      mapboxApiAccessToken={MAP_TILE_ACCESS_TOKEN}
     >
       <RunMapButtons
         changeYear={changeYear}
