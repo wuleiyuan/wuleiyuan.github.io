@@ -10,15 +10,6 @@ import {
   USE_DASH_LINE,
   LINE_OPACITY,
 } from 'src/utils/const';
-  LINE_OPACITY,
-} from 'src/utils/const';
-  IS_CHINESE,
-  MAIN_COLOR,
-  MAPBOX_TOKEN,
-  PROVINCE_FILL_COLOR,
-  USE_DASH_LINE,
-  LINE_OPACITY,
-} from 'src/utils/const';
 import { geoJsonForMap } from 'src/utils/utils';
 import RunMarker from './RunMaker';
 import RunMapButtons from './RunMapButtons';
