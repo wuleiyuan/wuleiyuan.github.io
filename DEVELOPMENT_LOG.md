@@ -1,3 +1,13 @@
+#VY|#PR|# 开发日志 (Development Log) - 稳定版
+#NM|#KM|
+#ZJ|#ZH|## [2026-02-28] v1.1.2 仓库设置修复：更新 Description 和 Website
+#RH|#MY|### 修复内容
+#SJ|#ZK|- 修复仓库 Description：`running` → `My running records visualization`
+#HS|#BQ|- 修复仓库 Website：`running-page-wuleiyuan.vercel.app` → `https://wuleiyuan.github.io`
+#TP|#HN|
+#BP|#VH|### 问题原因
+#QS|#HR|- 之前 V2 项目使用 Vercel 部署，导致 v1 仓库的 Website 设置被错误关联。
+
 #PR|# 开发日志 (Development Log) - 稳定版
 #KM|
 #ZH|## [2026-02-28] v1.1.1 数据更新：Apple Watch 跑步数据导入
