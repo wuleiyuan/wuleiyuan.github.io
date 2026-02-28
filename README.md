@@ -1,6 +1,13 @@
 # Running Page (V1 - GitHub Pages Edition)
 
-> **Version: 1.1.0**
+> **Version: 1.2.0**
+> **GitHub Repository**: [wuleiyuan/wuleiyuan.github.io](https://github.com/wuleiyuan/wuleiyuan.github.io)
+> **Live Demo**: [https://wuleiyuan.github.io](https://wuleiyuan.github.io)
+>
+> **Version Update (2026-02-28)**:
+> - **Data Update**: Imported 380 running records from Apple Watch Excel export (total 804 records).
+> - **Map Source**: Migrated from Mapbox to MapTiler for stable map rendering.
+> - **Repository Fix**: Corrected GitHub repo description and website URL settings.
 > **GitHub Repository**: [wuleiyuan/wuleiyuan.github.io](https://github.com/wuleiyuan/wuleiyuan.github.io)
 > **Live Demo**: [https://wuleiyuan.github.io](https://wuleiyuan.github.io)
 >

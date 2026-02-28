@@ -1,6 +1,13 @@
 # Running Page (V1 - GitHub Pages Edition)
 
-> **版本: 1.1.0**
+> **版本: 1.2.0**
+> **GitHub 仓库**: [wuleiyuan/wuleiyuan.github.io](https://github.com/wuleiyuan/wuleiyuan.github.io)
+> **在线演示**: [https://wuleiyuan.github.io](https://wuleiyuan.github.io)
+>
+> **版本更新记录 (2026-02-28)**:
+> - **数据更新**: 从 Apple Watch Excel 导入了 380 条跑步记录（共 804 条）。
+> - **地图源**: 迁移至 MapTiler，确保地图稳定加载。
+> - **仓库修复**: 修正了 GitHub 仓库的描述和网站地址设置。
 > **GitHub 仓库**: [wuleiyuan/wuleiyuan.github.io](https://github.com/wuleiyuan/wuleiyuan.github.io)
 > **在线演示**: [https://wuleiyuan.github.io](https://wuleiyuan.github.io)
 >

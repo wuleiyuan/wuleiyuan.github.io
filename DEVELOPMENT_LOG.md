@@ -1,3 +1,13 @@
+#MY|#VY|#PR|# 开发日志 (Development Log) - 稳定版
+#KM|#NM|#KM|
+#BW|#ZJ|#ZH|## [2026-02-28] v1.2.0 版本更新：数据导入与仓库设置修复
+#NT|#RH|#MY|### 更新内容
+#SP|#SJ|#ZK|- 版本号升级：1.1.0 → 1.2.0
+#NH|#HS|#BQ|- 数据更新：从 Apple Watch Excel 导入了 380 条跑步记录（总计 804 条）
+#VK|#TP|#HN|- 地图源：已完成 Mapbox → MapTiler 迁移
+#SM|#BP|#VH|- 仓库设置：修复了 Description 和 Website URL
+#JH|#QS|#HR|- 同步 v2：从 v1 同步数据至 running-page-v2 项目
+
 #VY|#PR|# 开发日志 (Development Log) - 稳定版
 #NM|#KM|
 #ZJ|#ZH|## [2026-02-28] v1.1.2 仓库设置修复：更新 Description 和 Website
