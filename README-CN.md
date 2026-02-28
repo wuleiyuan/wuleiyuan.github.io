@@ -1,10 +1,13 @@
 # Running Page (V1 - GitHub Pages Edition)
 
+> **版本: 1.1.0**
+> **GitHub 仓库**: [wuleiyuan/wuleiyuan.github.io](https://github.com/wuleiyuan/wuleiyuan.github.io)
+> **在线演示**: [https://wuleiyuan.github.io](https://wuleiyuan.github.io)
+>
 > **版本更新记录 (2026-02-28)**:
 > - **地图源更新**: 本项目（作为稳定版）已将底层地图瓦片服务由 Mapbox 成功迁移至 **MapTiler**。
 > - **解决限制**: 修复了由于原 Mapbox Token 过期导致的地图无法加载问题。
 > - **合并结构**: 现与新一代 Vercel 版在本地同级管理。本项目将作为经典的 GitHub Pages 稳定版继续运行。
-
 ---
 
 
