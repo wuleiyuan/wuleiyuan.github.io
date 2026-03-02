@@ -1,0 +1,30 @@
+#XT|name: Publish GitHub Pages
+
+#PQ|on:
+#NX|  push:
+#BK|    branches: [ master ]
+#XV|  workflow_dispatch:
+
+#WW|jobs:
+#TK|  build:
+#ZV|    runs-on: ubuntu-latest
+#TR|    steps:
+#SB|      - uses: actions/checkout@v4
+
+#NW|      - name: Setup Node
+#QT|        uses: actions/setup-node@v4
+#JM|        with:
+#NJ|          node-version: '18'
+#ST|          cache: 'yarn'
+
+#BS|      - name: Install dependencies
+#KV|        run: yarn install
+
+#TK|      - name: Build
+#HS|        run: yarn build --prefix-paths
+
+#QB|      - name: Deploy
+#QP|        uses: peaceiris/actions-gh-pages@v3
+#JM|        with:
+#SS|          github_token: ${{ secrets.GITHUB_TOKEN }}
+#MW|          publish_dir: ./public
