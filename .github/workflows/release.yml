@@ -7,14 +7,15 @@ on:
         description: 'Version bump type'
         required: true
         default: patch
-        type: choi`ÄÅΩ¡—ŸBà)ons:
+        type: choice
+        options:
           - patch
           - minor
           - major
 
 jobs:
   release:
-    runs-on, ulntu-latest
+    runs-on: ubuntu-latest
     permissions:
       contents: write
     steps:
@@ -22,21 +23,21 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          token: ${ secrets.GITHUB_TOKEN }
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Bump version and create tag
         id: tag_version
-        uses: mathieudtur/github-tag-action@v6.1
+        uses: mathieudutour/github-tag-action@v6.1
         with:
-          github_token: ${ secrets.GITHUB_TOKEN }
-        default_bump: ${ github.event.inputs.version_type }
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          default_bump: ${{ github.event.inputs.version_type }}
 
       - name: Create Release
         uses: actions/create-release@v1
         env:
-          GITHUB_TOKEN: ${ {steps.tag_version.outputs.new_tag }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${ {steps.tag_version.outputs.new_tag }}
-          release_name: Release ${{steps.tag_version.outputs.new_tag }}
+          tag_name: ${{ steps.tag_version.outputs.new_tag }}
+          release_name: Release ${{ steps.tag_version.outputs.new_tag }}
           draft: false
           prerelease: false
