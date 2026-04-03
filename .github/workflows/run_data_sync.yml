@@ -1,62 +1,62 @@
-#HP|name: Sync Running Data from Joyrun
+name: Sync Running Data from Keep
 
-#PQ|on:
-#RT|  # 每天 UTC 00:00 自动运行（北京时间 08:00）
-#QK|  schedule:
-#MS|    - cron: '0 0 * * *'
-#SB|  # 允许手动触发
-#XV|  workflow_dispatch:
-#JT|
+on:
+  # 每天 UTC 00:00 自动运行（北京时间 08:00）
+  schedule:
+    - cron: '0 0 * * *'
+  # 允许手动触发
+  workflow_dispatch:
 
-#WW|jobs:
-#MW|  sync-and-deploy:
-#ZV|    runs-on: ubuntu-latest
-#JR|    env:
-#VH|      RUN_TYPE: joyrun
-#PN|      ATHLETE: WuLeiYuan
-#JZ|      TITLE: WuLeiYuan Running
-#BS|      MIN_GRID_DISTANCE: 10
-#MZ|      TITLE_GRID: Over 10km Runs
-#QJ|      GITHUB_NAME: wuleiyuan
-#BH|      GITHUB_EMAIL: smile_wly@163.com
+jobs:
+  sync-and-deploy:
+    runs-on: ubuntu-latest
+    env:
+      RUN_TYPE: keep
+      ATHLETE: WuLeiYuan
+      TITLE: WuLeiYuan Running
+      MIN_GRID_DISTANCE: 10
+      TITLE_GRID: Over 10km Runs
+      GITHUB_NAME: wuleiyuan
+      GITHUB_EMAIL: smile_wly@163.com
+      KEEP_PHONE_NUMBER: ${{ secrets.KEEP_PHONE_NUMBER }}
+      KEEP_PASSWORD: ${{ secrets.KEEP_PASSWORD }}
 
-#TR|    steps:
-#QS|      - name: 🛎️ Checkout code
-#SM|        uses: actions/checkout@v4
+    steps:
+      - name: 🛎️ Checkout code
+        uses: actions/checkout@v4
 
-#XN|      - name: 🐍 Set up Python 3.10
-#RH|        uses: actions/setup-python@v5
-#JM|        with:
-#JK|          python-version: '3.10'
+      - name: 🐍 Set up Python 3.10
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
 
-#JW|      - name: 📦 Install dependencies
-#TP|        run: |
-#WY|          python -m pip install --upgrade pip
-#TB|          pip install -r requirements.txt
+      - name: 📦 Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
 
-#XR|      - name: 🔁 Sync data from Joyrun
-#TP|        run: |
-#ZK|          python scripts/joyrun_sync.py \
-#RH|            "${{ secrets.JOYRUN_UID }}" \
-#NT|            "${{ secrets.JOYRUN_SID }}" \
-#JK|            --from-uid-sid
+      - name: 🔁 Sync data from Keep
+        run: |
+          python scripts/keep_sync.py \
+            "${{ secrets.KEEP_PHONE_NUMBER }}" \
+            "${{ secrets.KEEP_PASSWORD }}"
 
-#JQ|      - name: 🖼️ Generate SVGs
-#TP|        run: |
-#PH|          python scripts/gen_svg.py --from-db --title "${{ env.TITLE }}" --type github --athlete "${{ env.ATHLETE }}" --output assets/github.svg
-#XM|          python scripts/gen_svg.py --from-db --title "${{ env.TITLE_GRID }}" --type grid --athlete "${{ env.ATHLETE }}" --output assets/grid.svg --min-distance ${{ env.MIN_GRID_DISTANCE }}
+      - name: 🖼️ Generate SVGs
+        run: |
+          python scripts/gen_svg.py --from-db --title "${{ env.TITLE }}" --type github --athlete "${{ env.ATHLETE }}" --output assets/github.svg
+          python scripts/gen_svg.py --from-db --title "${{ env.TITLE_GRID }}" --type grid --athlete "${{ env.ATHLETE }}" --output assets/grid.svg --min-distance ${{ env.MIN_GRID_DISTANCE }}
 
-#VJ|      - name: 💾 Commit and push (safe mode)
-#TP|        run: |
-#NP|          git config user.name "${{ env.GITHUB_NAME }}"
-#BH|          git config user.email "${{ env.GITHUB_EMAIL }}"
-#MH|          # 安静添加文件，即使不存在也不报错
-#NM|          git add activities.json gpx/ assets/ 2>/dev/null || true
-#KP|          # 仅当有更改时才提交
-#WZ|          if ! git diff --staged --quiet; then
-#PR|            git commit -m "chore: update running data from Joyrun"
-#KY|            git push
-#VV|            echo "✅ Successfully pushed new running data."
-#SQ|          else
-#QX|            echo "ℹ️ No changes detected. Nothing to commit."
-#HB|          fi
+      - name: 💾 Commit and push (safe mode)
+        run: |
+          git config user.name "${{ env.GITHUB_NAME }}"
+          git config user.email "${{ env.GITHUB_EMAIL }}"
+          # 安静添加文件，即使不存在也不报错
+          git add activities.json gpx/ assets/ 2>/dev/null || true
+          # 仅当有更改时才提交
+          if ! git diff --staged --quiet; then
+            git commit -m "chore: update running data from Keep"
+            git push
+            echo "✅ Successfully pushed new running data."
+          else
+            echo "ℹ️ No changes detected. Nothing to commit."
+          fi
