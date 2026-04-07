@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import { MAIN_COLOR } from 'src/utils/const';
 import { formatPace, titleForRun, formatRunTime  } from 'src/utils/utils';
 import styles from './style.module.scss';
