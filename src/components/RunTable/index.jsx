@@ -79,6 +79,7 @@ const RunTable = ({
           {runs.map((run) => (
             <RunRow
               runs={runs}
+              allRuns={runs}
               run={run}
               key={run.run_id}
               locateActivity={locateActivity}
