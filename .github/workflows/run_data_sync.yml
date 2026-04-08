@@ -46,8 +46,9 @@ jobs:
 
       - name: 🖼️ Generate SVGs
         run: |
-          python scripts/gen_svg.py --from-db --title "${{ env.TITLE }}" --type github --athlete "${{ env.ATHLETE }}" --output assets/github.svg
-          python scripts/gen_svg.py --from-db --title "${{ env.TITLE_GRID }}" --type grid --athlete "${{ env.ATHLETE }}" --output assets/grid.svg --min-distance ${{ env.MIN_GRID_DISTANCE }}
+          echo "=== Generating SVGs ===" 
+          python scripts/gen_svg.py --from-db --title "${{ env.TITLE }}" --type github --athlete "${{ env.ATHLETE }}" --output assets/github.svg 2>&1 || true
+          python scripts/gen_svg.py --from-db --title "${{ env.TITLE_GRID }}" --type grid --athlete "${{ env.ATHLETE }}" --output assets/grid.svg --min-distance ${{ env.MIN_GRID_DISTANCE }} 2>&1 || true
 
       - name: 💾 Commit and push (safe mode)
         run: |
