@@ -38,10 +38,11 @@ jobs:
 
       - name: 🔁 Sync data from Keep
         run: |
-          set -x
-          python scripts/keep_sync.py \
+          echo "=== Running Keep sync ==="
+          python -u scripts/keep_sync.py \
             "${{ secrets.KEEP_PHONE_NUMBER }}" \
-            "${{ secrets.KEEP_PASSWORD }}"
+            "${{ secrets.KEEP_PASSWORD }}" \
+            2>&1 || true
 
       - name: 🖼️ Generate SVGs
         run: |
