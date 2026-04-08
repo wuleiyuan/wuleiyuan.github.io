@@ -11,6 +11,7 @@ jobs:
   sync-and-deploy:
     runs-on: ubuntu-latest
     env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
       RUN_TYPE: keep
       ATHLETE: WuLeiYuan
       TITLE: WuLeiYuan Running
@@ -37,6 +38,7 @@ jobs:
 
       - name: 🔁 Sync data from Keep
         run: |
+          set -x
           python scripts/keep_sync.py \
             "${{ secrets.KEEP_PHONE_NUMBER }}" \
             "${{ secrets.KEEP_PASSWORD }}"
