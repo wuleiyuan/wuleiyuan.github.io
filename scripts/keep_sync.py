@@ -61,9 +61,20 @@ def get_single_run_data(session, headers, run_id):
 
 
 def decode_runmap_data(text):
-    run_points_data = zlib.decompress(base64.b64decode(text), 16 + zlib.MAX_WBITS)
-    run_points_data = json.loads(run_points_data)
-    return run_points_data
+    try:
+        run_points_data = zlib.decompress(base64.b64decode(text), 16 + zlib.MAX_WBITS)
+        run_points_data = json.loads(run_points_data)
+        return run_points_data
+    except Exception as e:
+        print(f"Failed to decode runmap data: {e}")
+        try:
+            text_fixed = text.replace('-', '+').replace('_', '/')
+            run_points_data = zlib.decompress(base64.b64decode(text_fixed), 16 + zlib.MAX_WBITS)
+            run_points_data = json.loads(run_points_data)
+            return run_points_data
+        except Exception as e2:
+            print(f"Also failed with URL-safe base64: {e2}")
+            return []
 
 
 def parse_raw_data_to_nametuple(run_data, old_gpx_ids, with_download_gpx=False):
@@ -79,13 +90,15 @@ def parse_raw_data_to_nametuple(run_data, old_gpx_ids, with_download_gpx=False):
     ):
         raw_data_url = run_data.get("rawDataURL")
         r = requests.get(raw_data_url)
-        # string strart with `H4sIAAAAAAAA` --> decode and unzip
         run_points_data = decode_runmap_data(r.text)
-        if with_download_gpx:
-            if str(keep_id) not in old_gpx_ids:
-                gpx_data = parse_points_to_gpx(run_points_data, start_time)
-                download_keep_gpx(gpx_data, str(keep_id))
-        run_points_data = [[p["latitude"], p["longitude"]] for p in run_points_data]
+        if run_points_data:
+            if with_download_gpx:
+                if str(keep_id) not in old_gpx_ids:
+                    gpx_data = parse_points_to_gpx(run_points_data, start_time)
+                    download_keep_gpx(gpx_data, str(keep_id))
+            run_points_data = [[p["latitude"], p["longitude"]] for p in run_points_data]
+        else:
+            run_points_data = []
     heart_rate = None
     if run_data["heartRate"]:
         heart_rate = run_data["heartRate"].get("averageHeartRate", None)
@@ -120,6 +133,8 @@ def parse_raw_data_to_nametuple(run_data, old_gpx_ids, with_download_gpx=False):
         "average_speed": run_data["distance"] / run_data["duration"],
         "location_country": str(run_data.get("region", "")),
     }
+    if not d.get("location_country"):
+        d["location_country"] = ""
     return namedtuple("x", d.keys())(*d.values())
 
 
@@ -138,12 +153,17 @@ def get_all_keep_tracks(email, password, old_tracks_ids, with_download_gpx=False
         print(f"parsing keep id {run}")
         try:
             run_data = get_single_run_data(s, headers, run)
+            if not run_data:
+                print(f"  No data returned for {run}")
+                continue
             track = parse_raw_data_to_nametuple(
                 run_data, old_gpx_ids, with_download_gpx
             )
-            tracks.append(track)
+            if track:
+                tracks.append(track)
+                print(f"  Successfully parsed: {track.name}")
         except Exception as e:
-            print(f"Something wrong paring keep id {run}" + str(e))
+            print(f"Something wrong paring keep id {run}: {str(e)[:100]}")
     return tracks
 
 

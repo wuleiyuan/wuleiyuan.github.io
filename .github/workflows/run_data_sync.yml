@@ -44,6 +44,16 @@ jobs:
             "${{ secrets.KEEP_PASSWORD }}" \
             2>&1 || true
 
+      - name: 💾 Commit DB changes
+        run: |
+          git config user.name "${{ env.GITHUB_NAME }}"
+          git config user.email "${{ env.GITHUB_EMAIL }}"
+          git add scripts/data.db 2>/dev/null || true
+          if ! git diff --staged --quiet; then
+            git commit -m "chore: update running data to DB"
+            git push
+          fi
+
       - name: 🖼️ Generate SVGs
         run: |
           echo "=== Generating SVGs ===" 
@@ -54,8 +64,8 @@ jobs:
         run: |
           git config user.name "${{ env.GITHUB_NAME }}"
           git config user.email "${{ env.GITHUB_EMAIL }}"
-          # 安静添加文件，即使不存在也不报错
-          git add activities.json gpx/ assets/ 2>/dev/null || true
+          # Add all possible data files
+          git add activities.json gpx/ assets/ src/static/activities.json scripts/data.db scripts/activities.json 2>/dev/null || true
           # 仅当有更改时才提交
           if ! git diff --staged --quiet; then
             git commit -m "chore: update running data from Keep"
