@@ -107,8 +107,9 @@ class Generator:
             if not activity.start_date_local:
                 continue
             try:
+                date_str = str(activity.start_date_local)
                 date = datetime.datetime.strptime(
-                    activity.start_date_local, "%Y-%m-%d %H:%M:%S"
+                    date_str, "%Y-%m-%d %H:%M:%S"
                 ).date()
             except (ValueError, TypeError):
                 continue
