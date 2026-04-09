@@ -90,7 +90,15 @@ def parse_raw_data_to_nametuple(run_data, old_gpx_ids, with_download_gpx=False):
     ):
         raw_data_url = run_data.get("rawDataURL")
         r = requests.get(raw_data_url)
-        run_points_data = decode_runmap_data(r.text)
+        if not r.ok:
+            print(f"Failed to download raw data from {raw_data_url}: {r.status_code} {r.text}")
+            run_points_data = []
+        else:
+            try:
+                run_points_data = decode_runmap_data(r.text)
+            except Exception as e:
+                print(f"Failed to decode raw data: {e}")
+                run_points_data = []
         if run_points_data:
             if with_download_gpx:
                 if str(keep_id) not in old_gpx_ids:
