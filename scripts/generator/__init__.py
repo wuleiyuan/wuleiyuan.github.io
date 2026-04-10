@@ -97,7 +97,7 @@ class Generator:
         activities = (
             self.session.query(Activity)
             .filter(Activity.distance > 0.1)
-            .order_by(Activity.start_date_local)
+            .order_by(Activity.start_date_local.desc())
         )
         activity_list = []
 
