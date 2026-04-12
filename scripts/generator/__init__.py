@@ -97,7 +97,7 @@ class Generator:
         activities = (
             self.session.query(Activity)
             .filter(Activity.distance > 2000)
-            .order_by(Activity.start_date_local.desc())
+            .order_by(Activity.start_date_local.asc())
         )
         activity_list = []
 
@@ -130,7 +130,7 @@ class Generator:
                 last_date = date
                 activity_list.append(activity.to_dict())
 
-        return activity_list
+        return activity_list[::-1]
 
     def get_old_tracks_ids(self):
         try:
