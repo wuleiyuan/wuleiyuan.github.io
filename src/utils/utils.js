@@ -83,23 +83,13 @@ const locationForRun = (run) => {
         }
         if (countryMatch) {
           country = countryMatch[0];
+          if (['北京', '上海', '天津', '重庆'].includes(country)) {
+            city = country + '市';
+            province = city;
+            country = '中国';
+          }
         }
       }
-    }
-  }
-    if (provinceMatch) {
-      [province] = provinceMatch;
-    }
-    const l = location.split(',');
-    // or to handle keep location format
-    let countryMatch = l[l.length - 1].match(
-      /[\u4e00-\u9fa5].*[\u4e00-\u9fa5]/
-    );
-    if (!countryMatch && l.length >= 3) {
-      countryMatch = l[2].match(/[\u4e00-\u9fa5].*[\u4e00-\u9fa5]/);
-    }
-    if (countryMatch) {
-      [country] = countryMatch;
     }
   }
   if (MUNICIPALITY_CITIES_ARR.includes(city)) {
