@@ -172,7 +172,7 @@ const Index = () => {
             <a href="/">{siteTitle}</a>
           </h1>
         </div>
-        {viewport.zoom <= 3 && IS_CHINESE ? (
+        {IS_CHINESE ? (
           <LocationStat
             changeYear={changeYear}
             changeCity={changeCity}
