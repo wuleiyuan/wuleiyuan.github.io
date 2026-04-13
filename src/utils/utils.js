@@ -69,16 +69,21 @@ const locationForRun = (run) => {
       if (provinceMatch) {
         province = provinceMatch[0];
       }
-      const l = location.split(',');
-      // or to handle keep location format
-      let countryMatch = l[l.length - 1].match(
-        /[\u4e00-\u9fa5].*[\u4e00-\u9fa5]/
-      );
-      if (!countryMatch && l.length >= 3) {
-        countryMatch = l[2].match(/[\u4e00-\u9fa5].*[\u4e00-\u9fa5]/);
-      }
-      if (countryMatch) {
-        country = countryMatch[0];
+      
+      if (province || city) {
+        country = '中国';
+      } else {
+        const l = location.split(',');
+        // or to handle keep location format
+        let countryMatch = l[l.length - 1].match(
+          /[\u4e00-\u9fa5].*[\u4e00-\u9fa5]/
+        );
+        if (!countryMatch && l.length >= 3) {
+          countryMatch = l[2].match(/[\u4e00-\u9fa5].*[\u4e00-\u9fa5]/);
+        }
+        if (countryMatch) {
+          country = countryMatch[0];
+        }
       }
     }
   }
