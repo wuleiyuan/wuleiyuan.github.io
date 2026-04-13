@@ -52,12 +52,36 @@ const locationForRun = (run) => {
   const location = run.location_country;
   let [city, province, country] = ['', '', ''];
   if (location) {
-    // Only for Chinese now
-    const cityMatch = location.match(/[\u4e00-\u9fa5]*(市|自治州)/);
-    const provinceMatch = location.match(/[\u4e00-\u9fa5]*(省|自治区)/);
-    if (cityMatch) {
-      [city] = cityMatch;
+    if (location.includes('{') && location.includes('}')) {
+      const countryMatch = location.match(/'country':\s*'([^']+)'/);
+      if (countryMatch) country = countryMatch[1];
+      const provMatch = location.match(/'province':\s*'([^']+)'/);
+      if (provMatch) province = provMatch[1];
+      const cityMatchStr = location.match(/'city':\s*'([^']+)'/);
+      if (cityMatchStr) city = cityMatchStr[1];
+    } else {
+      // Only for Chinese now
+      const cityMatch = location.match(/[\u4e00-\u9fa5]*(市|自治州)/);
+      const provinceMatch = location.match(/[\u4e00-\u9fa5]*(省|自治区)/);
+      if (cityMatch) {
+        city = cityMatch[0];
+      }
+      if (provinceMatch) {
+        province = provinceMatch[0];
+      }
+      const l = location.split(',');
+      // or to handle keep location format
+      let countryMatch = l[l.length - 1].match(
+        /[\u4e00-\u9fa5].*[\u4e00-\u9fa5]/
+      );
+      if (!countryMatch && l.length >= 3) {
+        countryMatch = l[2].match(/[\u4e00-\u9fa5].*[\u4e00-\u9fa5]/);
+      }
+      if (countryMatch) {
+        country = countryMatch[0];
+      }
     }
+  }
     if (provinceMatch) {
       [province] = provinceMatch;
     }
