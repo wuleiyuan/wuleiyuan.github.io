@@ -41,6 +41,14 @@ def get_to_download_runs_ids(session, headers):
         r = session.get(RUN_DATA_API.format(last_date=last_date), headers=headers)
         if r.ok:
             run_logs = r.json()["data"]["records"]
+            if last_date == 0 and run_logs:
+                print(f"DEBUG running: First page returned {len(run_logs)} records")
+                for rec in run_logs[:3]:
+                    print(f"  Record date: {rec.get('date')}, logs: {len(rec.get('logs', []))}")
+                    for log in rec.get('logs', []):
+                        stats = log.get('stats', {})
+                        st = stats.get('startTime')
+                        print(f"    - id: {stats.get('id')}, doubtful: {stats.get('isDoubtful')}, time: {st}")
 
             for i in run_logs:
                 logs = [j["stats"] for j in i["logs"]]
