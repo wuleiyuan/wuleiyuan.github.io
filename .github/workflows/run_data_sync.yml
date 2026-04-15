@@ -54,6 +54,53 @@ jobs:
             git push
           fi
 
+      - name: 📄 Generate activities.json from DB
+        run: |
+          echo "=== Generating activities.json from DB ==="
+          python3 -c "
+          import sqlite3
+          import json
+          from datetime import timedelta
+
+          conn = sqlite3.connect('scripts/data.db')
+          cursor = conn.cursor()
+
+          cursor.execute('''
+              SELECT run_id, name, distance, moving_time, type, 
+                     start_date, start_date_local, location_country, summary_polyline,
+                     average_heartrate, average_speed
+              FROM activities 
+              WHERE distance > 2000 AND type = 'Run'
+              ORDER BY start_date_local ASC
+          ''')
+
+          columns = ['run_id', 'name', 'distance', 'moving_time', 'type',
+                     'start_date', 'start_date_local', 'location_country', 'summary_polyline',
+                     'average_heartrate', 'average_speed']
+
+          activities = []
+          for row in cursor.fetchall():
+              activity = {}
+              for i, col in enumerate(columns):
+                  val = row[i]
+                  if isinstance(val, timedelta):
+                      val = str(val).split('.')[0]
+                  elif isinstance(val, float):
+                      if val != val:
+                          val = None
+                  activity[col] = val
+              activities.append(activity)
+
+          conn.close()
+
+          activity_list = activities[::-1]
+          json_path = 'src/static/activities.json'
+          with open(json_path, 'w') as f:
+              json.dump(activity_list, f, ensure_ascii=False)
+          print(f'Generated {len(activity_list)} activities to JSON')
+          print(f'Latest: {activity_list[0][\"start_date_local\"] if activity_list else \"None\"}')
+          "
+
       - name: 🖼️ Generate SVGs
         run: |
           echo "=== Generating SVGs ===" 
