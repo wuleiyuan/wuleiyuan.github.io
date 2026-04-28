@@ -48,8 +48,10 @@ jobs:
         run: |
           git config user.name "${{ env.GITHUB_NAME }}"
           git config user.email "${{ env.GITHUB_EMAIL }}"
-          git add scripts/data.db 2>/dev/null || true
-          if ! git diff --staged --quiet; then
+          git add scripts/data.db
+          if git diff --staged --quiet; then
+            echo "DB unchanged, skipping commit"
+          else
             git commit -m "chore: update running data to DB"
             git push
           fi
@@ -112,12 +114,12 @@ jobs:
           git config user.name "${{ env.GITHUB_NAME }}"
           git config user.email "${{ env.GITHUB_EMAIL }}"
           # Add all possible data files
-          git add activities.json gpx/ assets/ src/static/activities.json scripts/data.db scripts/activities.json 2>/dev/null || true
+          git add activities.json gpx/ assets/ src/static/activities.json scripts/data.db scripts/activities.json
           # 仅当有更改时才提交
-          if ! git diff --staged --quiet; then
+          if git diff --staged --quiet; then
+            echo "ℹ️ No changes detected. Nothing to commit."
+          else
             git commit -m "chore: update running data from Keep"
             git push
             echo "✅ Successfully pushed new running data."
-          else
-            echo "ℹ️ No changes detected. Nothing to commit."
           fi
