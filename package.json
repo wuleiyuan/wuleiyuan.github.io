@@ -1,7 +1,7 @@
 {
   "name": "yihong.run",
   "description": "Yi hong",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "author": "Yi Hong <zouzou0208@gmail.com>",
   "dependencies": {
     "@mapbox/mapbox-gl-language": "^1.0.0",

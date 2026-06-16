@@ -1,5 +1,6 @@
 import datetime
 import sys
+from collections import defaultdict
 
 import arrow
 import stravalib
@@ -129,6 +130,52 @@ class Generator:
                 activity.streak = streak
                 last_date = date
                 activity_list.append(activity.to_dict())
+
+        kept = set()
+        same_second = defaultdict(list)
+        for a in activity_list:
+            same_second[a["start_date_local"]].append(a)
+        for records in same_second.values():
+            best = max(records, key=lambda r: (
+                r["distance"],
+                1 if r.get("summary_polyline") else 0,
+                r.get("average_heartrate", 0) or 0,
+            ))
+            kept.add(best["run_id"])
+
+        remaining = [a for a in activity_list if a["run_id"] in kept]
+        same_minute = defaultdict(list)
+        for a in remaining:
+            same_minute[a["start_date_local"][:16]].append(a)
+
+        tier2_kept = set()
+        for records in same_minute.values():
+            srecs = sorted(records, key=lambda r: r["start_date_local"])
+            processed = set()
+            i = 0
+            while i < len(srecs):
+                if srecs[i]["run_id"] in processed:
+                    i += 1
+                    continue
+                cluster = [srecs[i]]
+                j = i + 1
+                while j < len(srecs):
+                    if srecs[j]["run_id"] in processed:
+                        j += 1
+                        continue
+                    if abs(srecs[i]["distance"] - srecs[j]["distance"]) <= 190:
+                        cluster.append(srecs[j])
+                        j += 1
+                    else:
+                        break
+                best = max(cluster, key=lambda r: (r["distance"], r.get("average_heartrate", 0) or 0))
+                for r in cluster:
+                    if r["run_id"] != best["run_id"]:
+                        processed.add(r["run_id"])
+                tier2_kept.add(best["run_id"])
+                i = j
+
+        activity_list = [a for a in activity_list if a["run_id"] in tier2_kept]
 
         return activity_list[::-1]
 

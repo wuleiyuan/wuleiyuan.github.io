@@ -65,6 +65,15 @@ const locationForRun = (run) => {
       const provinceMatch = location.match(/[\u4e00-\u9fa5]*(省|自治区)/);
       if (cityMatch) {
         city = cityMatch[0];
+        // Strip province prefix from city (e.g. "陕西省咸阳市" → "咸阳市")
+        if (provinceMatch && city.startsWith(provinceMatch[0])) {
+          city = city.slice(provinceMatch[0].length);
+        }
+        // Fix duplicate city names (e.g. "北京市北京市" → "北京市")
+        const half = Math.floor(city.length / 2);
+        if (half >= 2 && city.slice(0, half) === city.slice(half)) {
+          city = city.slice(0, half);
+        }
       }
       if (provinceMatch) {
         province = provinceMatch[0];
