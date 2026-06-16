@@ -60,13 +60,12 @@ jobs:
         run: |
           echo "=== Generating activities.json from DB ==="
           python3 -c "
-          import sqlite3
-          import json
+          import sqlite3, json
+          from collections import defaultdict
           from datetime import timedelta
 
           conn = sqlite3.connect('scripts/data.db')
           cursor = conn.cursor()
-
           cursor.execute('''
               SELECT run_id, name, distance, moving_time, type, 
                      start_date, start_date_local, location_country, summary_polyline,
@@ -75,11 +74,9 @@ jobs:
               WHERE distance > 2000 AND type = 'Run'
               ORDER BY start_date_local ASC
           ''')
-
           columns = ['run_id', 'name', 'distance', 'moving_time', 'type',
                      'start_date', 'start_date_local', 'location_country', 'summary_polyline',
                      'average_heartrate', 'average_speed']
-
           activities = []
           for row in cursor.fetchall():
               activity = {}
@@ -92,10 +89,55 @@ jobs:
                           val = None
                   activity[col] = val
               activities.append(activity)
-
           conn.close()
 
-          activity_list = activities[::-1]
+          # dedup tier 1: same second -> keep best (longest distance)
+          kept = set()
+          same_second = defaultdict(list)
+          for a in activities:
+              same_second[a['start_date_local']].append(a)
+          for records in same_second.values():
+              best = max(records, key=lambda r: (
+                  r['distance'],
+                  1 if r.get('summary_polyline') else 0,
+                  r.get('average_heartrate', 0) or 0,
+              ))
+              kept.add(best['run_id'])
+
+          # dedup tier 2: same minute + distance diff <= 0.30km -> keep best
+          remaining = [a for a in activities if a['run_id'] in kept]
+          same_minute = defaultdict(list)
+          for a in remaining:
+              same_minute[a['start_date_local'][:16]].append(a)
+          tier2_kept = set()
+          for records in same_minute.values():
+              srecs = sorted(records, key=lambda r: r['start_date_local'])
+              processed = set()
+              i = 0
+              while i < len(srecs):
+                  if srecs[i]['run_id'] in processed:
+                      i += 1
+                      continue
+                  cluster = [srecs[i]]
+                  j = i + 1
+                  while j < len(srecs):
+                      if srecs[j]['run_id'] in processed:
+                          j += 1
+                          continue
+                      if abs(srecs[i]['distance'] - srecs[j]['distance']) <= 300:
+                          cluster.append(srecs[j])
+                          j += 1
+                      else:
+                          break
+                  best = max(cluster, key=lambda r: (r['distance'], r.get('average_heartrate', 0) or 0))
+                  for r in cluster:
+                      if r['run_id'] != best['run_id']:
+                          processed.add(r['run_id'])
+                  tier2_kept.add(best['run_id'])
+                  i = j
+
+          activity_list = [a for a in activities if a['run_id'] in tier2_kept][::-1]
+
           json_path = 'src/static/activities.json'
           with open(json_path, 'w') as f:
               json.dump(activity_list, f, ensure_ascii=False)
